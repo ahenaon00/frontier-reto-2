@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan: Agente Científico</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+        pre, code { background-color: #f6f8fa; border-radius: 6px; }
+        pre { padding: 16px; overflow: auto; }
+        .mermaid { text-align: center; margin: 2em 0; }
+        @media print { body { padding: 0; max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div id="content">Cargando documento...</div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false });
+        
+        const markdown = "# Arquitectura del Agente Deductor (Enfoque Cient\u00edfico)\n\nEn lugar de saturar el servicio real con cientos de peticiones a ciegas, hemos cambiado el enfoque hacia un **Bucle de Hip\u00f3tesis y Verificaci\u00f3n Offline**. El Agente actuar\u00e1 como un cient\u00edfico o matem\u00e1tico: deducir\u00e1 las f\u00f3rmulas bas\u00e1ndose estrictamente en los ejemplos exitosos que ya poseemos, probar\u00e1 su c\u00f3digo localmente, y solo usar\u00e1 la red para comprobar mutaciones espec\u00edficas.\n\n## Diagrama del Flujo Cient\u00edfico\n\n`mermaid\nflowchart TD\n    A[(Casos Exitosos Conocidos)] --> B[1. Agente IA: Genera Hip\u00f3tesis Matem\u00e1tica]\n    B -->|Escribe 'motor_hash.py'| C{2. Verificaci\u00f3n Local}\n    C -->|Falla en replicar \u00e9xitos| B\n    C -->|Pasa 100%| D[3. Generaci\u00f3n de Mutaciones]\n    D -->|Peticiones Quir\u00fargicas| E(Caja Negra Real)\n    E --> F{4. Respuesta de API}\n    F -->|Error Controlado| G[5. Documentar Regla de Validaci\u00f3n]\n    F -->|Fallo Inesperado| B\n    G --> H[(Servidor R\u00e9plica Actualizado)]\n`\n\n## Las Dos Fases del Agente\n\n### Fase 1: Anclaje de \u00c9xito (Zero-Cost)\nEl LLM recibe nuestros pares de *Input -> Output* comprobados.\nSu misi\u00f3n es escribir un algoritmo en Python (motor_hash.py) que produzca **exactamente** esas mismas salidas. Este proceso ocurre en un bucle cerrado (Verificaci\u00f3n Local). No se dispara ni una sola petici\u00f3n a la API real hasta que el agente logre un \"ajuste perfecto\" para los casos que sabemos que son correctos.\n\n### Fase 2: Exploraci\u00f3n de Fronteras\nUna vez que el algoritmo local es capaz de imitar a la perfecci\u00f3n el comportamiento positivo del servicio, el Agente empieza a deformar deliberadamente las peticiones para entender los bordes del sistema.\nEjemplos de mutaciones:\n- Vaciar argumentos intencionalmente (Buscando entender qu\u00e9 dispara E104).\n- Enviar tipos de datos err\u00f3neos o s\u00edmbolos prohibidos (Buscando entender E201).\n- Enviar un formato correcto pero con una matem\u00e1tica desfasada a prop\u00f3sito (Buscando entender E202).\n\n## Ecosistema Desplegado\nPara que este agente pueda operar de forma aut\u00f3noma, el entorno se divide en tres componentes:\n1. **motor_hash.py (El Cerebro)**: Contiene la l\u00f3gica matem\u00e1tica (Semillas, Hash Horner). Es el **\u00fanico** archivo que el Agente reescribir\u00e1 autom\u00e1ticamente cuando descubra un nuevo patr\u00f3n.\n2. **servidor.py (La Capa API)**: Un servidor web FastAPI que envuelve al cerebro y lo expone como una API REST id\u00e9ntica a la Caja Negra.\n3. **cli.py (La Sonda)**: Interfaz de terminal para que tanto nosotros como el Agente disparemos pruebas contra la r\u00e9plica y comparemos resultados c\u00f3modamente.\n";
+        
+        const renderer = new marked.Renderer();
+        const originalCode = renderer.code.bind(renderer);
+        renderer.code = (code, language) => {
+            if (language === 'mermaid') {
+                return '<div class="mermaid">' + code + '</div>';
+            }
+            return originalCode(code, language);
+        };
+        marked.use({ renderer });
+        
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+        mermaid.run({ querySelector: '.mermaid' });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{
+ "DEPOSITO;AC-9001;1000": [
+  20,
+  true
+ ],
+ "DEPOSITO;AC-9001;1001": [
+  17,
+  true
+ ],
+ "DEPOSITO;AC-9001;1010": [
+  87,
+  true
+ ],
+ "DEPOSITO;AC-9001;2000": [
+  27,
+  true
+ ],
+ "DEPOSITO;AC-9002;1000": [
+  90,
+  true
+ ],
+ "DEPOSITO;AC-9001;10000": [
+  94,
+  true
+ ],
+ "TRANSFER;AC-9001;AC-9002;1000": [
+  5,
+  true
+ ],
+ "TRANSFER;AC-9001;AC-9002;1001": [
+  2,
+  true
+ ],
+ "TRANSFER;AC-9001;AC-9002;1010": [
+  72,
+  true
+ ],
+ "TRANSFER;AC-9001;AC-9003;1000": [
+  75,
+  true
+ ],
+ "TRANSFER;AC-9001;AC-9002;10000": [
+  41,
+  true
+ ],
+ "ALTA;Ana": [
+  50,
+  true
+ ],
+ "ALTA;Anb": [
+  47,
+  true
+ ],
+ "ALTA;Aoa": [
+  20,
+  true
+ ],
+ "ALTA;Bna": [
+  57,
+  true
+ ],
+ "ALTA;Anaa": [
+  3,
+  true
+ ],
+ "ANULA;OP-9001": [
+  38,
+  true
+ ],
+ "ANULA;OP-9002": [
+  35,
+  true
+ ],
+ "ANULA;OP-9011": [
+  8,
+  true
+ ],
+ "ANULA;OP-90010": [
+  80,
+  true
+ ]
+}

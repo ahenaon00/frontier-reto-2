@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan de Arquitectura</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+        pre, code { background-color: #f6f8fa; border-radius: 6px; }
+        pre { padding: 16px; overflow: auto; }
+        .mermaid { text-align: center; margin: 2em 0; }
+        @media print { body { padding: 0; max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false });
+        
+        const markdown = "# Arquitectura Generativa End-to-End para R\u00e9plicas de Servicios\n\nCon base en la visi\u00f3n de un sistema m\u00e1s directo y proactivo, esta arquitectura describe un **Pipeline Aut\u00f3nomo** que no solo monitorea, sino que es capaz de \"ir al servicio, entenderlo, programar su propia versi\u00f3n y levantarla\" de principio a fin, bas\u00e1ndose en un conjunto inicial de reglas base.\n\n## 1. El Concepto Principal: De la Exploraci\u00f3n al Despliegue\n\nEn lugar de construir una r\u00e9plica est\u00e1tica que luego parcheamos, construiremos un **Agente Orquestador** que funciona como un ingeniero de software inverso automatizado. Le daremos el formato b\u00e1sico de los comandos, y \u00e9l se encargar\u00e1 de extraer la l\u00f3gica matem\u00e1tica oculta y de crear un clon funcional instant\u00e1neo.\n\n```mermaid\nflowchart TD\n    A[Reglas Base / Esquema] --> B(1. Explorador Activo)\n    B -->|Genera Tr\u00e1fico y Guarda Respuestas| C{Caja Negra Externa}\n    C -->|Pares Input/Output| D(2. Sintetizador L\u00f3gico de IA)\n    D -->|Deduce F\u00f3rmulas y Genera C\u00f3digo| E(3. Verificador de C\u00f3digo)\n    E -->|Testea la R\u00e9plica vs Caja Negra| F{\u00bfRespuestas Id\u00e9nticas?}\n    F -->|No| D\n    F -->|S\u00ed| G(4. Gestor de Montaje)\n    G -->|Ejecuta y Expone| H[R\u00e9plica Local en Vivo]\n```\n\n## 2. Los 4 M\u00f3dulos del Sistema\n\n### M\u00f3dulo 1: Explorador Activo (El Mapeador)\nToma las \"reglas definidas\" iniciales (ej. qu\u00e9 comandos existen, longitud m\u00e1xima, tipos de datos) y bombardea el servicio `X` estrat\u00e9gicamente para mapear el terreno.\n- **Entrada:** Plantillas de comandos (ej. `CONSULTA;{alfanum\u00e9rico}`).\n- **Acci\u00f3n:** Hace un barrido (fuzzing) probando diferentes combinaciones para ver qu\u00e9 genera errores (`E201`, `E104`) y qu\u00e9 genera \u00e9xitos.\n- **Salida:** Un dataset de entrenamiento exacto: Entradas -> Respuestas de la Caja Negra.\n\n### M\u00f3dulo 2: Sintetizador L\u00f3gico (El Cerebro)\nUn agente LLM avanzado cuyo \u00fanico trabajo es actuar como ingeniero inverso y programador.\n- **Entrada:** El dataset generado por el Explorador.\n- **Acci\u00f3n:** Descubre el patr\u00f3n (ej. \"Ah, esto es un hash de Horner base 10 con m\u00f3dulo 97\") y **escribe un archivo de servidor web completo** (ej. en FastAPI/Flask) que implemente exactamente esa l\u00f3gica.\n- **Salida:** C\u00f3digo fuente de la r\u00e9plica local (`app_generada.py`).\n\n### M\u00f3dulo 3: Verificador en Sandbox (El Tester)\nAntes de montar el servicio para el p\u00fablico, debemos estar seguros de que el LLM no alucin\u00f3.\n- **Acci\u00f3n:** Levanta la `app_generada.py` en un puerto temporal (sandbox). Luego, toma el dataset del M\u00f3dulo 1 y le dispara a la nueva app.\n- **Bucle de Feedback:** Si la app generada da un resultado distinto a la Caja Negra, el Verificador le env\u00eda el error al Sintetizador para que reescriba el c\u00f3digo. Este bucle se repite hasta alcanzar 100% de paridad.\n\n### M\u00f3dulo 4: Gestor de Montaje (El Desplegador)\nUna vez que el Verificador da luz verde, el sistema toma el control.\n- **Acci\u00f3n:** Mata cualquier r\u00e9plica anterior que estuviera corriendo, mueve `app_generada.py` a producci\u00f3n local, e inicia el servicio en el puerto definitivo.\n- **Resultado:** En cuesti\u00f3n de minutos, el sistema analiz\u00f3 un servicio desconocido y levant\u00f3 un clon exacto, listo para recibir tr\u00e1fico real.\n\n## 3. \u00bfC\u00f3mo Maneja el Cambio Futuro?\n\nEste pipeline es iterativo. Si en el futuro tenemos que conectarnos a un nuevo servicio, o si el servicio `X` cambia de un d\u00eda para otro, simplemente **volvemos a ejecutar el Pipeline desde el M\u00f3dulo 1**. El sistema ir\u00e1 al servicio cambiado, descubrir\u00e1 las nuevas reglas (M\u00f3dulo 2), reescribir\u00e1 el c\u00f3digo del clon, lo probar\u00e1 (M\u00f3dulo 3) y reemplazar\u00e1 el servicio actual sin intervenci\u00f3n humana (M\u00f3dulo 4).\n\n## 4. Plan de Implementaci\u00f3n Inmediato\n\nPara materializar esto hoy, crearemos el **Orquestador (Pipeline Script)** que una las piezas:\n\n1. **Definir las Reglas Base:** Crear un archivo YAML/JSON (`esquema.yml`) que el orquestador leer\u00e1 para saber a d\u00f3nde ir y qu\u00e9 formato b\u00e1sico probar.\n2. **Construir el Explorador:** Un script Python que lea el esquema, contacte a la API (usando nuestra infraestructura de rate-limit) y guarde un `.jsonl`.\n3. **Prompting del Sintetizador:** Preparar el c\u00f3digo que enviar\u00e1 el `.jsonl` al LLM y extraer\u00e1 el c\u00f3digo Python generado.\n4. **Script de Montaje:** Un programa maestro que orqueste estos pasos y al final ejecute `subprocess.Popen([\"python\", \"app_generada.py\"])`.\n";
+        
+        const renderer = new marked.Renderer();
+        const originalCode = renderer.code.bind(renderer);
+        renderer.code = (code, language) => {
+            if (language === 'mermaid') {
+                return '<div class="mermaid">' + code + '</div>';
+            }
+            return originalCode(code, language);
+        };
+        marked.use({ renderer });
+        
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+        mermaid.run({ querySelector: '.mermaid' });
+    </script>
+</body>
+</html>

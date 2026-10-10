@@ -1,0 +1,30 @@
+{
+ "ALTA;aaaaa": [
+  30,
+  true
+ ],
+ "ALTA;baaaa": [
+  3,
+  true
+ ],
+ "ALTA;abaaa": [
+  37,
+  true
+ ],
+ "ALTA;aabaa": [
+  21,
+  false
+ ],
+ "ALTA;aaaba": [
+  null,
+  null
+ ],
+ "ALTA;aaaab": [
+  27,
+  true
+ ],
+ "ALTA;Aaaaa": [
+  30,
+  true
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "9": [
+  "CONSULTA;BC-0001",
+  "35",
+  {
+   "error": "E401",
+   "mensaje": "cuenta inexistente"
+  }
+ ],
+ "10": [
+  "CONSULTA;AD-0001",
+  "84",
+  {
+   "error": "E401",
+   "mensaje": "cuenta inexistente"
+  }
+ ],
+ "11": [
+  "CONSULTA;AC_0001",
+  "14",
+  {
+   "error": "E401",
+   "mensaje": "cuenta inexistente"
+  }
+ ],
+ "12": [
+  "CONSULTA;AC-1001",
+  "21",
+  {
+   "error": "E401",
+   "mensaje": "cuenta inexistente"
+  }
+ ],
+ "13": [
+  "CONSULTA;AC-0101",
+  null,
+  null
+ ],
+ "14": [
+  "CONSULTA;AC-0011",
+  "81",
+  {
+   "error": "E401",
+   "mensaje": "cuenta inexistente"
+  }
+ ],
+ "15": [
+  "CONSULTA;AC-0002",
+  "11",
+  {
+   "error": "E401",
+   "mensaje": "cuenta inexistente"
+  }
+ ]
+}

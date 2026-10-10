@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Arquitectura: Genio Matemático</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+        pre, code { background-color: #f6f8fa; border-radius: 6px; }
+        pre { padding: 16px; overflow: auto; }
+        .mermaid { text-align: center; margin: 2em 0; }
+        @media print { body { padding: 0; max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div id="content">Cargando documento...</div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false });
+        
+        const markdown = "# Arquitectura: El Genio Matem\u00e1tico (Zero-Knowledge)\n\n## 1. El Desaf\u00edo y las Restricciones\nNos enfrentamos a un servicio tipo \"caja negra\" con estrictas restricciones de uso (Rate-Limits). **No sabemos cu\u00e1les son las reglas** de validaci\u00f3n, ni sabemos **qu\u00e9 va a pasar** en el futuro si los operadores del servicio deciden cambiar el formato, a\u00f1adir nuevos campos o alterar la matem\u00e1tica oculta.\n\nSi nuestro sistema intentara descubrir c\u00f3mo funciona el servicio enviando cientos de peticiones aleatorias (fuzzing masivo) para ver qu\u00e9 responde, agotar\u00edamos nuestra cuota de la API inmediatamente y sobrecargar\u00edamos su servidor.\n\n## 2. Decisiones Arquitect\u00f3nicas (El \"Por Qu\u00e9\")\nPara resolver esto de forma segura e inteligente, la arquitectura se basa en **Inducci\u00f3n Pura y Offloading Local**.\n\n*   **Cero Asunciones (Zero-Knowledge):** No pre-programaremos ninguna regla humana (como \"los controles son de dos d\u00edgitos\"). La Inteligencia Artificial act\u00faa como un analista criptogr\u00e1fico: solo recibe datos crudos (lo que entr\u00f3 y lo que sali\u00f3 con \u00e9xito) y debe deducir todo el patr\u00f3n desde cero.\n*   **Protecci\u00f3n del Servidor Real:** El 99% del razonamiento (crear hip\u00f3tesis, formular matem\u00e1ticas, fallar y reescribir) ocurre **100% de forma local** en nuestra memoria. La IA usa nuestro historial de \u00e9xitos para validar sus teor\u00edas matem\u00e1ticas sin tocar la red. Esto garantiza que no sobrecargamos la caja negra mientras la IA aprende.\n*   **Pruebas Quir\u00fargicas:** Solo cuando la IA est\u00e1 matem\u00e1ticamente segura de que su f\u00f3rmula replica toda la historia conocida, se le autoriza hacer 1 o 2 peticiones a la Caja Negra con casos nunca antes vistos para confirmar la teor\u00eda.\n*   **Aprendizaje Reactivo:** Si el servidor rechaza la prueba, significa que hay un patr\u00f3n oculto que desconocemos. En lugar de iterar contra el servidor bombarde\u00e1ndolo, el sistema detiene la red, incorpora el nuevo fracaso a su conocimiento local y vuelve a la fase de pizarr\u00f3n (explorar alternativas l\u00f3gicas).\n\n## 3. Diagrama de Flujo (Bucle Inductivo)\n\n`mermaid\nflowchart TD\n    A[(Dataset Crudo\\nCasos Exitosos Conocidos)] --> B[1. IA: Inferencia Matem\u00e1tica Pura]\n    B -->|Genera F\u00f3rmula Python| C{2. Sandbox Local\\n\u00bfPasa el 100% del dataset?}\n    C -->|Falla (Replantea Matem\u00e1tica)| B\n    C -->|Pasa (Alta Confianza)| D(3. Inventa 2 Casos In\u00e9ditos)\n    D --> E{4. Petici\u00f3n Quir\u00fargica\\n(Red Real)}\n    E -->|\u00c9XITO: Teor\u00eda Comprobada| F[5. Despliega L\u00f3gica Descubierta]\n    E -->|FALLO: El patr\u00f3n real difiere| G[6. Exploraci\u00f3n de Alternativas]\n    G -->|A\u00f1ade la Excepci\u00f3n al Dataset| A\n`\n\n## 4. Beneficios del Enfoque\n1. **Conservaci\u00f3n de Rate-Limits:** Minimizamos al m\u00e1ximo las peticiones HTTPS. Resolvemos el puzzle en casa.\n2. **Resiliencia al Cambio:** Si las reglas cambian ma\u00f1ana, el agente est\u00e1 dise\u00f1ado para dudar. Al recibir el primer fallo, autom\u00e1ticamente tomar\u00e1 las respuestas v\u00e1lidas recientes y re-descubrir\u00e1 el nuevo patr\u00f3n, sin necesidad de reprogramaci\u00f3n humana.\n3. **Inmunidad a Alucinaciones:** Al obligar a la IA a pasar un test estricto local antes de hacer peticiones reales, filtramos cualquier l\u00f3gica \"alucinada\" o incorrecta desde la ra\u00edz.\n";
+        
+        const renderer = new marked.Renderer();
+        const originalCode = renderer.code.bind(renderer);
+        renderer.code = (code, language) => {
+            if (language === 'mermaid') {
+                return '<div class="mermaid">' + code + '</div>';
+            }
+            return originalCode(code, language);
+        };
+        marked.use({ renderer });
+        
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+        mermaid.run({ querySelector: '.mermaid' });
+    </script>
+</body>
+</html>

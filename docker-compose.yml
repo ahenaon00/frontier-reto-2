@@ -1,0 +1,29 @@
+services:
+  # 1. Contenedor de Producción (La Réplica API)
+  replica-api:
+    image: python:3.12-slim
+    container_name: replica_api
+    working_dir: /app
+    volumes:
+      - ./replica:/app  # Volumen compartido donde reside motor_hash.py
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "pip install fastapi uvicorn pydantic
+      && uvicorn servidor:app --host 0.0.0.0 --port 8000 --reload"
+    restart: always
+
+  # 2. Contenedor Sandbox Aislado (El Agente Genio Matemático)
+  agente-worker:
+    image: python:3.12-slim
+    container_name: agente_worker
+    working_dir: /app
+    env_file:
+      - .env  # Aquí inyectamos el FRONTIER_TOKEN y OPENROUTER_API_KEY
+    volumes:
+      # Acceso de escritura al código de la réplica para auto-actualizar
+      - ./replica:/app/replica 
+      # Acceso de lectura al dataset histórico
+      - ./explorador:/app/dataset:ro 
+    # Mantenemos el contenedor vivo para poder ejecutar tareas cron o scripts manuales
+    command: tail -f /dev/null

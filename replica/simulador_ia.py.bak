@@ -1,0 +1,78 @@
+def simular_caja_negra(payload):
+    # Estado inicial del servidor
+    global cuentas, operaciones, contador_operaciones
+    if not hasattr(simular_caja_negra, "estado_inicializado"):
+        cuentas = {}
+        operaciones = {}
+        contador_operaciones = 1
+        simular_caja_negra.estado_inicializado = True
+
+    # Parsear el payload
+    partes = payload.split(';')
+    comando = partes[0]
+    
+    if comando == "PING":
+        return {"status": 200, "body": {"pong": True}}
+    
+    elif comando == "ALTA":
+        if len(partes) != 3:
+            return {"status": 400, "body": {"error": "E302", "mensaje": "aridad inválida"}}
+        nombre, control = partes[1], partes[2]
+        if control == "82":
+            cuenta_id = f"AC-{len(cuentas) + 1:04d}"
+            cuentas[cuenta_id] = 0
+            return {"status": 201, "body": {"cuentaId": cuenta_id}}
+        else:
+            return {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}
+    
+    elif comando == "CONSULTA":
+        if len(partes) != 3:
+            return {"status": 400, "body": {"error": "E302", "mensaje": "aridad inválida"}}
+        cuenta_id, control = partes[1], partes[2]
+        if cuenta_id in cuentas:
+            return {"status": 200, "body": {"cuenta_id": cuenta_id, "saldo": f"{cuentas[cuenta_id]:.2f}"}}
+        else:
+            return {"status": 404, "body": {"error": "E401", "mensaje": "cuenta inexistente"}}
+    
+    elif comando == "DEPOSITO":
+        if len(partes) != 4:
+            return {"status": 400, "body": {"error": "E302", "mensaje": "aridad inválida"}}
+        cuenta_id, monto, control = partes[1], int(partes[2]), partes[3]
+        if cuenta_id in cuentas and control == "86":
+            cuentas[cuenta_id] += monto
+            operacion_id = f"OP-{contador_operaciones:04d}"
+            operaciones[operacion_id] = {"tipo": "DEPOSITO", "cuenta": cuenta_id, "monto": monto}
+            contador_operaciones += 1
+            return {"status": 200, "body": {"status": "recieved", "operacionId": operacion_id}}
+        else:
+            return {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}
+    
+    elif comando == "TRANSFER":
+        if len(partes) != 5:
+            return {"status": 400, "body": {"error": "E302", "mensaje": "aridad inválida"}}
+        cuenta_origen, cuenta_destino, monto, control = partes[1], partes[2], int(partes[3]), partes[4]
+        if cuenta_origen in cuentas and cuenta_destino in cuentas and control == "86":
+            if cuentas[cuenta_origen] >= monto:
+                cuentas[cuenta_origen] -= monto
+                cuentas[cuenta_destino] += monto
+                operacion_id = f"OP-{contador_operaciones:04d}"
+                operaciones[operacion_id] = {"tipo": "TRANSFER", "origen": cuenta_origen, "destino": cuenta_destino, "monto": monto}
+                contador_operaciones += 1
+                return {"status": 200, "body": {"status": "recieved", "operacionId": operacion_id}}
+            else:
+                return {"status": 422, "body": {"error": "E507", "mensaje": "saldo insuficiente"}}
+        else:
+            return {"status": 404, "body": {"error": "E401", "mensaje": "cuenta inexistente"}}
+    
+    elif comando == "ANULA":
+        if len(partes) != 3:
+            return {"status": 400, "body": {"error": "E302", "mensaje": "aridad inválida"}}
+        operacion_id, control = partes[1], partes[2]
+        if operacion_id in operaciones and control == "66":
+            del operaciones[operacion_id]
+            return {"status": 200, "body": {"ok": True, "anulada": operacion_id}}
+        else:
+            return {"status": 404, "body": {"error": "E402", "mensaje": "operación inexistente"}}
+    
+    else:
+        return {"status": 400, "body": {"error": "E301", "mensaje": "comando desconocido "}}

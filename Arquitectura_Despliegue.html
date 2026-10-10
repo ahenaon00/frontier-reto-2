@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Topología de Despliegue</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 950px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+        pre, code { background-color: #f6f8fa; border-radius: 6px; }
+        pre { padding: 16px; overflow: auto; }
+        .mermaid { text-align: center; margin: 2em 0; }
+        @media print { body { padding: 0; max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div id="content">Generando documento...</div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false });
+        
+        const markdown = "# Arquitectura de Despliegue: R\u00e9plica Aut\u00f3noma y Agente Matem\u00e1tico\n\nEsta documentaci\u00f3n define la estructura f\u00edsica y topol\u00f3gica del sistema. Separamos la \"Fuerza Bruta\" (el servidor de producci\u00f3n) del \"Cerebro\" (el agente que infiere reglas), garantizando m\u00e1xima seguridad, alta disponibilidad y latencia cero.\n\n## 1. Topolog\u00eda del Sistema (Estructura Dockerizada)\n\nEl ecosistema se divide en **tres componentes principales** montados mediante Docker:\n\n### A. Volumen Compartido (La Memoria Persistente)\nUn almacenamiento en disco que enlaza ambos contenedores. Mantiene:\n- casos_exito.jsonl: La base de datos emp\u00edrica con peticiones reales confirmadas v\u00e1lidas.\n- motor_hash.py: El script de Python que contiene la f\u00f3rmula matem\u00e1tica actual y aprobada.\n\n### B. Contenedor de Producci\u00f3n (La R\u00e9plica API)\n- **Tecnolog\u00eda:** Servidor FastAPI (uvicorn con modo --reload).\n- **Funci\u00f3n:** Ejecutarse 24/7. Recibe el tr\u00e1fico masivo de las aplicaciones internas simulando ser el servicio real.\n- **Comportamiento:** Carece de inteligencia propia y **no gasta cuota de la red externa**. Aplica instant\u00e1neamente la l\u00f3gica descrita en motor_hash.py.\n\n### C. Contenedor Sandbox (Agente Inteligente en Aislamiento)\n- **Tecnolog\u00eda:** Script Worker en Python + Integraci\u00f3n LLM (OpenRouter).\n- **Funci\u00f3n:** Opera como un proceso en segundo plano (Cronjob o reacciona ante alertas). Lee el dataset emp\u00edrico, infiere patrones y descubre anomal\u00edas.\n- **Seguridad Vital:** Al ejecutar c\u00f3digo de Python generado por la IA (mediante exec o subprocesos), debe estar estrictamente aislado. Si la IA alucina c\u00f3digo inestable o malicioso, el sandbox absorbe el fallo sin colgar ni vulnerar el contenedor de Producci\u00f3n.\n\n## 2. Diagrama Arquitect\u00f3nico de Despliegue\n\n`mermaid\nflowchart TD\n    subgraph Volumen_Compartido [Volumen Compartido (Disco)]\n        D[(Dataset: casos_exito.jsonl)]\n        M[motor_hash.py (L\u00f3gica Viva)]\n    end\n\n    subgraph Contenedor_Replica [Contenedor de Producci\u00f3n (FastAPI)]\n        API[Servidor R\u00e9plica en Puerto 8000]\n        M -.->|Uvicorn Hot-Reload| API\n        Clientes(Nuestras Apps Internas) <-->|Tr\u00e1fico 24/7 de Alta Velocidad| API\n    end\n\n    subgraph Contenedor_Worker [Contenedor Sandbox Aislado (Agente Cient\u00edfico)]\n        O[Script Orquestador]\n        D -.->|1. Entrena con Historial| O\n        O <-->|2. Intercambio Prompt/C\u00f3digo| LLM((Cerebro LLM\\nOpenRouter))\n        O <-->|3. Test Matem\u00e1tico Local| Sandbox[Ejecutor Seguro de Python]\n        Sandbox -.->|4. Petici\u00f3n Quir\u00fargica| CajaNegra{Caja Negra Real}\n        CajaNegra -.->|5. Verificaci\u00f3n| O\n        O ==>|6. Aprueba y Sobrescribe| M\n    end\n`\n\n## 3. El Ciclo de Auto-Sanaci\u00f3n (Self-Healing)\n\n1. **Detecci\u00f3n del Cambio:** El servicio \"Caja Negra\" real cambia sus par\u00e1metros. Los nuevos casos v\u00e1lidos se inyectan silenciosamente al dataset.\n2. **Razonamiento Aislado:** El Contenedor Sandbox arranca. El Orquestador exige a la IA un nuevo algoritmo que explique este cambio.\n3. **Validaci\u00f3n en Cuarentena:** El Sandbox eval\u00faa la nueva f\u00f3rmula de la IA contra todos los historiales localmente. Solo dispara peticiones a la Caja Negra para confirmar bordes nuevos.\n4. **Despliegue Caliente (Zero Downtime):** Una vez que el modelo acierta al 100%, el Orquestador sobrescribe motor_hash.py en el Volumen Compartido. El contenedor FastAPI detecta el cambio en el archivo, se recarga internamente en un milisegundo y el sistema de producci\u00f3n se auto-repara sin intervenci\u00f3n humana.\n";
+        
+        const renderer = new marked.Renderer();
+        const originalCode = renderer.code.bind(renderer);
+        renderer.code = (code, language) => {
+            if (language === 'mermaid') {
+                return '<div class="mermaid">' + code + '</div>';
+            }
+            return originalCode(code, language);
+        };
+        marked.use({ renderer });
+        
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+        mermaid.run({ querySelector: '.mermaid' });
+    </script>
+</body>
+</html>
