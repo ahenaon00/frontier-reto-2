@@ -21,25 +21,25 @@ El orquestador principal (`agente_matematico.py`) encierra a la IA en un sandbox
 ```mermaid
 flowchart LR
     subgraph IA["Cerebro (LLM)"]
-        H[Formula Hipótesis]
-        C[Escribe Código Python\nsimular_caja_negra\ngenerar_payload]
+        H["Formula Hipótesis"]
+        C["Escribe Código Python<br>simular_caja_negra<br>generar_payload"]
         H --> C
     end
 
     subgraph ORQUESTADOR["Orquestador (Bucle de Choque)"]
-        Q[Fase 1: Cuarentena Local\nPrueba código vs 20 Casos]
-        E[Generación de Feedback\n(JSON real, Status esperados)]
-        S[Fase 2: Prueba Quirúrgica\nAtaque al Servidor Real]
+        Q["Fase 1: Cuarentena Local<br>Prueba código vs 20 Casos"]
+        E["Generación de Feedback<br>(JSON real, Status esperados)"]
+        S["Fase 2: Prueba Quirúrgica<br>Ataque al Servidor Real"]
         
-        Q -- Falla --> E
-        E -- Retroalimenta --> IA
-        Q -- 100% Éxito --> S
+        Q -- "Falla" --> E
+        E -- "Retroalimenta" --> IA
+        Q -- "100% Éxito" --> S
     end
 
-    API[[API Real\nCaja Negra]]
+    API[["API Real<br>Caja Negra"]]
 
     C --> ORQUESTADOR
-    S -- Inyecta Historial\nEnvía Ataque --> API
+    S -- "Inyecta Historial<br>Envía Ataque" --> API
 ```
 
 ### Funciones Clave del Agente:
