@@ -162,3 +162,14 @@
 {"tipo": "experimento", "sesion": "ronda_14", "paso": 1, "payload": "ALTA;NombreNuevo;37", "observado": {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}, "prediccion": {"status": 201, "body": {"cuentaId": "AC-00XX"}}, "coincide": false, "motivo": "Verificar que mi control() generaliza para base nueva", "clase": "control_rechazado", "variable": "CONTROL", "auto": true, "ts": 1791675003}
 {"tipo": "reset", "sesion": "ronda_15", "paso": 0, "payload": "__RESET__", "ts": 1791675023}
 {"tipo": "experimento", "sesion": "ronda_15", "paso": 1, "payload": "ALTA;Nombrenuevo;15", "observado": {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}, "prediccion": {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}, "coincide": true, "motivo": "Testeo generalización control en cuenta nueva de ALTA.", "clase": "control_rechazado", "variable": "CONTROL", "auto": true, "ts": 1791675023}
+{"tipo": "reset", "sesion": "ronda_1", "paso": 0, "payload": "__RESET__", "ts": 1791681873}
+{"tipo": "reset", "sesion": "ronda_2", "paso": 0, "payload": "__RESET__", "ts": 1791681897}
+{"tipo": "experimento", "sesion": "ronda_2", "paso": 1, "payload": "ALTO;arg;44", "observado": {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}, "prediccion": {"status": 200, "body": {"dummy": "respuesta"}}, "coincide": false, "motivo": "No se debe llegar ya que comando no coincide", "clase": "control_rechazado", "variable": "CONTROL", "auto": false, "ts": 1791681902}
+{"tipo": "reset", "sesion": "ronda_3", "paso": 0, "payload": "__RESET__", "ts": 1791681929}
+{"tipo": "experimento", "sesion": "ronda_3", "paso": 1, "payload": "ALTA;NombreNuevo;31", "observado": {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}, "prediccion": {"status": 201, "body": {"cuentaId": "AC-00XX"}}, "coincide": false, "motivo": "Test generalización de control en ALTA con nombre nuevo", "clase": "control_rechazado", "variable": "CONTROL", "auto": true, "ts": 1791681935}
+{"tipo": "reset", "sesion": "ronda_4", "paso": 0, "payload": "__RESET__", "ts": 1791681962}
+{"tipo": "experimento", "sesion": "ronda_4", "paso": 1, "payload": "ALTA;NombreNuevo;55", "observado": {"status": 400, "body": {"error": "E202", "mensaje": "control inválido"}}, "prediccion": {"status": 201, "body": {"cuentaId": "AC-00XX"}}, "coincide": false, "motivo": "Test generalización de ALTA con nombre nuevo usando la fórmula especial", "clase": "control_rechazado", "variable": "CONTROL", "auto": true, "ts": 1791681968}
+{"tipo": "reset", "sesion": "ronda_5", "paso": 0, "payload": "__RESET__", "ts": 1791681985}
+{"tipo": "reset", "sesion": "ronda_6", "paso": 0, "payload": "__RESET__", "ts": 1791682006}
+{"tipo": "reset", "sesion": "ronda_7", "paso": 0, "payload": "__RESET__", "ts": 1791682027}
+{"tipo": "reset", "sesion": "ronda_8", "paso": 0, "payload": "__RESET__", "ts": 1791682046}
