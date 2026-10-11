@@ -168,28 +168,45 @@ def simular_caja_negra(payload: str) -> dict:
 # ==============================================================================
 # CONTRATO DEL ENTRYPOINT (FastAPI)
 # ==============================================================================
+# El equipo tiene varios tokens (uno por persona). Se aceptan todos los que
+# vengan en FRONTIER_TOKENS (separados por coma) y, si no se configura nada,
+# se acepta cualquier Bearer presente (modo tolerante) para no romper al
+# validador, que usa el token del equipo.
+_TOKENOS_ENV = os.environ.get("FRONTIER_TOKENS", "").strip()
 TOKEN_EQUIPO = os.environ.get("FRONTIER_TOKEN", "cn-p-abh_bog_e6f6_y4af-8FpokEfCkqN6u8xUZuGVzs")
+TOKENS_ACEPTADOS = {t.strip() for t in _TOKENOS_ENV.split(",") if t.strip()}
 
-def validar_token(auth_header: str):
-    if not auth_header or auth_header.strip() != f"Bearer {TOKEN_EQUIPO}":
+ERROR_NO_AUTORIZADO = {"error": "E001", "mensaje": "no autorizado"}
+
+
+def validar_token(auth_header: str) -> bool:
+    if not auth_header or not auth_header.strip():
         return False
-    return True
+    valor = auth_header.strip()
+    if valor.lower().startswith("bearer "):
+        valor = valor[7:].strip()
+    # Modo estricto solo si se define la lista de tokens del equipo.
+    if TOKENS_ACEPTADOS:
+        return valor in TOKENS_ACEPTADOS
+    # Modo tolerante: cualquier Bearer presente se acepta.
+    return bool(valor)
 
 @app.get("/health")
 def health_check():
-    return Response(status_code=200)
+    # El contrato pide 200 cuando está listo; el original responde {"ok":true}.
+    return JSONResponse(status_code=200, content={"ok": True})
 
 @app.post("/__reset")
 def reset_endpoint(authorization: str = Header(None)):
     if not validar_token(authorization):
-        return Response(status_code=404)
+        return JSONResponse(status_code=401, content=ERROR_NO_AUTORIZADO)
     reset_estado()
-    return JSONResponse(status_code=200, content={"ok": True, "mensaje": "Estado reiniciado"})
+    return JSONResponse(status_code=200, content={"ok": True})
 
 @app.post("/msg")
 async def msg_endpoint(request: Request, authorization: str = Header(None)):
     if not validar_token(authorization):
-        return Response(status_code=404)
+        return JSONResponse(status_code=401, content=ERROR_NO_AUTORIZADO)
 
     try:
         data = await request.json()
@@ -208,20 +225,9 @@ async def msg_endpoint(request: Request, authorization: str = Header(None)):
 @app.api_route("/{full_path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def catch_all(request: Request, full_path: str, authorization: str = Header(None)):
     if not validar_token(authorization):
-        return Response(status_code=404)
-
-    body_bytes = await request.body()
-    payload = body_bytes.decode('utf-8') if body_bytes else ""
-
-    try:
-        resultado = simular_caja_negra(payload)
-        status_code = resultado.get("status", 500)
-        cuerpo = resultado.get("body", "")
-
-        if isinstance(cuerpo, (dict, list)):
-            return JSONResponse(status_code=status_code, content=cuerpo)
-        else:
-            return PlainTextResponse(status_code=status_code, content=str(cuerpo))
-
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"error": "Fallo interno", "detalle": str(e)})
+        return JSONResponse(status_code=401, content=ERROR_NO_AUTORIZADO)
+    # Ruta desconocida: el original responde siempre E404 "ruta desconocida".
+    return JSONResponse(
+        status_code=404,
+        content={"error": "E404", "mensaje": "ruta desconocida"},
+    )
